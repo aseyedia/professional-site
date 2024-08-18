@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@splinetool/loader": "^1.9.15",
+    "@splinetool/react-spline": "^4.0.0",
+    "@splinetool/runtime": "^1.9.15",
     "ejs": "^3.1.10",
     "express": "^4.19.2"
   },
