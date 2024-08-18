@@ -2,19 +2,20 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
+
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 200, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 300, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 
 // Set renderer and effect size
 const widgetWidth = window.innerWidth;
-const widgetHeight = 200;  // Fixed height for the widget
+const widgetHeight = 300;  // Fixed height for the widget
 renderer.setSize(widgetWidth, widgetHeight);
 
 const effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
 effect.setSize(widgetWidth, widgetHeight);
-effect.domElement.style.color = 'white';
+effect.domElement.style.color = '#8ACE00';
 effect.domElement.style.backgroundColor = 'black';
 
 // Append the effect's DOM element to the three-container div
