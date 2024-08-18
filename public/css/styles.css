@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+#three-container {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #333;
+}
