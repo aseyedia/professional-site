@@ -5,7 +5,7 @@ import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 
 // Set up scene, camera, and renderer
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 300, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(41, window.innerWidth / 300, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 
 // Set renderer and effect size
@@ -15,14 +15,12 @@ renderer.setSize(widgetWidth, widgetHeight);
 
 const effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
 effect.setSize(widgetWidth, widgetHeight);
-effect.domElement.style.color = '#8ACE00';
-effect.domElement.style.backgroundColor = 'black';
+effect.domElement.style.color = 'var(--text-color)';
+effect.domElement.style.backgroundColor = 'var(--bg-color)';
 
-// Append the effect's DOM element to the three-container div
 const container = document.getElementById('three-container');
 container.appendChild(effect.domElement);
 
-// Create a cube
 const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
 const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
