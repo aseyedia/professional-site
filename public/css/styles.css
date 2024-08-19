@@ -3,14 +3,11 @@
     src: url('/SF-Mono-Nerd-Font/SFMono_Regular_Nerd_Font_Complete.otf') format('opentype');
 }
 
-
-body {
-    font-family: 'SF Mono Nerd Font', monospace;
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
+:root {
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --link-color: #0000EE;
+    --visited-link-color: #551A8B;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,20 +19,6 @@ body {
     }
 }
 
-:root {
-    --bg-color: #f0f0f0;
-    --text-color: #333;
-    --link-color: #0000EE;
-    --visited-link-color: #551A8B;
-}
-
-body.dark-theme {
-    --bg-color: #333;
-    --text-color: #f0f0f0;
-    --link-color: #8ACE00;
-    --visited-link-color: #00FFFF;
-}
-
 body {
     font-family: 'SF Mono Nerd Font', monospace;
     margin: 0;
@@ -44,6 +27,13 @@ body {
     color: var(--text-color);
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme {
+    --bg-color: #333;
+    --text-color: #f0f0f0;
+    --link-color: #8ACE00;
+    --visited-link-color: #00FFFF;
 }
 
 #toggle-theme {
@@ -107,6 +97,16 @@ ul {
 li::before {
     content: "• ";
     color: var(--link-color);
+}
+
+/* New Style for the References Section */
+.references-list {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.references-list li::before {
+    content: none;  /* Remove the custom bullet point */
 }
 
 main {
