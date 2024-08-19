@@ -42,7 +42,9 @@ const controls = new OrbitControls(camera, effect.domElement);
 controls.enableZoom = false;  // Disable zooming for this small widget
 
 function animate() {
-    requestAnimationFrame(animate);
+    setTimeout( function() {
+        requestAnimationFrame( animate );
+    }, 1000 / 60 );
     cube.rotation.x += 0.01;
     cube.rotation.y += 0.01;
     controls.update();
