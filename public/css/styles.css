@@ -127,18 +127,23 @@ main {
     padding: 10px;
     width: 100%;
     text-align: left;
+    font-size: 16px;
+    font-weight: bold;
     border: none;
     outline: none;
     transition: 0.4s;
     font-family: 'SF Mono Nerd Font', monospace;
+    padding-bottom: 5px;
 }
 
 .accordion:before {
     content: "+ ";
+    padding-bottom: 5px;
 }
 
 .accordion.active:before {
     content: "- ";
+    padding-bottom: 5px;
 }
 
 /* .accordion:hover {
@@ -151,7 +156,7 @@ main {
     padding: 0 10px;
     background-color: var(--bg-color);
     display: none;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .panel ul {
@@ -162,85 +167,3 @@ main {
 .panel li:before {
     content: "* ";
 }
-/* 
-.accordion {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    cursor: pointer;
-    padding: 10px;
-    width: 100%;
-    text-align: left;
-    border: none;
-    outline: none;
-    transition: 0.4s;
-    font-family: 'SF Mono Nerd Font', monospace;
-}
-
-.accordion:hover {
-    text-decoration: underline;
-}
-
-.panel {
-    display: none;
-    padding: 0 10px;
-    background-color: var(--bg-color);
-    overflow: hidden;
-}
-
-.panel ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.panel li:before {
-    content: "- ";
-}
-
-.accordion.active:before {
-    content: "▼ ";
-}
-
-.accordion:before {
-    content: "► ";
-}
-.skills-accordion {
-    width: 80%;
-    max-width: 600px;
-    margin: auto;
-    font-family: 'SF Mono Nerd Font', monospace;
-    margin-bottom: 10px;
-    border: none;
-}
-
-.accordion {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    cursor: pointer;
-    padding: 10px;
-    width: 100%;
-    text-align: left;
-    border: none;
-    outline: none;
-    transition: 0.4s;
-    font-family: 'SF Mono Nerd Font', monospace;
-}
-
-.accordion:hover {
-    text-decoration: underline;
-}
-
-.panel {
-    padding: 0 10px;
-    background-color: var(--bg-color);
-    display: none;
-    overflow: hidden;
-}
-
-.panel ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.panel li:before {
-    content: "- ";
-} */
