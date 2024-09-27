@@ -114,3 +114,133 @@ main {
     margin: 0 auto;
     padding: 0 20px;
 }
+
+.skills-accordion {
+    /* border: 1px solid var(--text-color); */
+    margin-bottom: 10px;
+}
+
+.accordion {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    font-family: 'SF Mono Nerd Font', monospace;
+}
+
+.accordion:before {
+    content: "+ ";
+}
+
+.accordion.active:before {
+    content: "- ";
+}
+
+/* .accordion:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    transition: all;
+} */
+
+.panel {
+    padding: 0 10px;
+    background-color: var(--bg-color);
+    display: none;
+    overflow: hidden;
+}
+
+.panel ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.panel li:before {
+    content: "* ";
+}
+/* 
+.accordion {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    font-family: 'SF Mono Nerd Font', monospace;
+}
+
+.accordion:hover {
+    text-decoration: underline;
+}
+
+.panel {
+    display: none;
+    padding: 0 10px;
+    background-color: var(--bg-color);
+    overflow: hidden;
+}
+
+.panel ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.panel li:before {
+    content: "- ";
+}
+
+.accordion.active:before {
+    content: "▼ ";
+}
+
+.accordion:before {
+    content: "► ";
+}
+.skills-accordion {
+    width: 80%;
+    max-width: 600px;
+    margin: auto;
+    font-family: 'SF Mono Nerd Font', monospace;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.accordion {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    font-family: 'SF Mono Nerd Font', monospace;
+}
+
+.accordion:hover {
+    text-decoration: underline;
+}
+
+.panel {
+    padding: 0 10px;
+    background-color: var(--bg-color);
+    display: none;
+    overflow: hidden;
+}
+
+.panel ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.panel li:before {
+    content: "- ";
+} */
