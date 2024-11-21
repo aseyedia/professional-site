@@ -30,9 +30,9 @@
         <button id="toggle-theme">Toggle Light/Dark Mode</button>
     </header>
 
-    <div id="three-container"></div>
+    <div id="three-container"><a href="#about-me" class="down-arrow" aria-label="Scroll to About Me">&#x2193;</a></div>
 
-    <main>
+    <main id="about-me">
         <h2>About Me</h2>
         <p>Hello. My name is Arta Seyedian.</p>
 
@@ -51,17 +51,21 @@
         </ul>
 
 
-        <p>Currently, I'm working as a contracted Web App Developer and Bioinformatics Engineer for <a href="https://pedsnet.org/">PEDsnet</a>, a
+        <p>Currently, I'm working as a contracted Web App Developer and Bioinformatics Engineer for <a
+                href="https://pedsnet.org/">PEDsnet</a>, a
             large, inter-institutional pediatric clinical research data-sharing consortium. My role involves setting up
             and customizing two instances of the open-source metadata repository <a
-            href="https://dspace.lyrasis.org/">DSpace</a> to
+                href="https://dspace.lyrasis.org/">DSpace</a> to
             manage codesets (collections of codes used for a given clinical concept, such as diagnosis or procedure
             codes). These repositories enable investigators around the world to collaboratively share pediatric
             clinical research data.</p>
 
-        <p>To meet these challenges, I've been rapidly learning and applying new skills in TypeScript, Angular, web
-            development, and backend management to tailor these repositories to the specific needs of our stakeholders.
-        </p>
+            <p>I'm also updating, refining and optimizing already-existing computational pipelines that standardize large pediatric clinical 
+                datasets for analysis. Many of these pipelines were written years ago by developers who have since left the project, so my role
+                involves understanding and rewriting these pipelines to ensure they are efficient and accurate. To do this, I am using Perl, Python,
+                and PostgreSQL to write new scripts and optimize existing ones. I am also using Docker to containerize these pipelines and ensure
+                they are reproducible.
+            </p>
 
         <h2>Skills</h2>
         <div class="skills-accordion">
@@ -98,20 +102,11 @@
             </div>
         </div>
 
-        <!-- <h2>Projects</h2>
-        <p> Over the many years, I've had the privilege of working on many different projects.</p>
-        <ul>
-            <li><a href="#">Project 1</a> - Brief description</li>
-            <li><a href="#">Project 2</a> - Brief description</li>
-            <li><a href="#">Project 3</a> - Brief description</li>
-        </ul> -->
-
         <h2>Contact</h2>
         <ul>
             <li>Email: <a href="mailto:arta.seyedian@gmail.com">arta[dot]seyedian[at]gmail.com</a></li>
             <li>GitHub: <a href="https://github.com/aseyedia">github.com/aseyedia</a></li>
-            <li>LinkedIn: <a
-                    href="https://www.linkedin.com/in/artaseyedian/">linkedin.com/in/artaseyedian</a></li>
+            <li>LinkedIn: <a href="https://www.linkedin.com/in/artaseyedian/">linkedin.com/in/artaseyedian</a></li>
         </ul>
 
         <h2>References</h2>
@@ -166,6 +161,24 @@
             }
 
             prefersDarkScheme.addListener((e) => toggleTheme(e.matches));
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const downArrow = document.querySelector('.down-arrow');
+            const aboutMeSection = document.getElementById('about-me');
+
+            downArrow.addEventListener('click', () => {
+                downArrow.style.display = 'none';
+            });
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        downArrow.style.display = 'none';
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(aboutMeSection);
         });
     </script>
 </body>

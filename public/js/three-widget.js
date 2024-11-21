@@ -39,7 +39,10 @@ scene.add(pointLight);
 camera.position.z = 4;
 
 const controls = new OrbitControls(camera, effect.domElement);
-controls.enableZoom = false;  // Disable zooming for this small widget
+controls.enableZoom = false;  
+controls.enablePan = false;
+controls.enableDamping = true;
+// controls.enableRotate = false;
 
 function animate() {
     setTimeout( function() {
