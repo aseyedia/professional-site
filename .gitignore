@@ -1,1 +1,7 @@
 node_modules/
+public/funky/js
+*.DS_Store
+funky-src
+public/funky
+dist
+package-lock.json
