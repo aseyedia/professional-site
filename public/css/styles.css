@@ -1,6 +1,8 @@
+/* public/css/styles.css */
 @font-face {
     font-family: 'SF Mono Nerd Font';
-    src: url('/SF-Mono-Nerd-Font/SFMono_Regular_Nerd_Font_Complete.otf') format('opentype');
+    src: url('/SF-Mono-Nerd-Font/SFMono_Regular_Nerd_Font_Complete.woff2') format('woff2');
+    font-display: swap;
 }
 
 :root {
