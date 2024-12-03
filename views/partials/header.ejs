@@ -1,0 +1,53 @@
+<h1 style="text-align: center;">
+    <a href="/" style="text-decoration: none; color: inherit;">
+        Arta Seyedian's Website
+    </a>
+</h1>
+
+<nav style="text-align: center;">
+    <a href="/" style="text-transform: lowercase; margin: 0 15px;">Home</a>
+    <a href="/projects" style="text-transform: lowercase; margin: 0 15px;">Projects</a>
+    <a href="/blog" style="text-transform: lowercase; margin: 0 15px;">Blog</a>
+</nav>
+
+<header>
+    <button id="toggle-theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-sun-moon">
+            <path d="M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.9 4.9 1.4 1.4" />
+            <path d="m17.7 17.7 1.4 1.4" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.3 17.7-1.4 1.4" />
+            <path d="m19.1 4.9-1.4 1.4" />
+        </svg>
+    </button>
+</header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.getElementById('toggle-theme');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function toggleTheme(isDark) {
+            document.body.classList.toggle('dark-theme', isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        toggleButton.addEventListener('click', () => {
+            const isDark = !document.body.classList.contains('dark-theme');
+            toggleTheme(isDark);
+        });
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (savedTheme === null && prefersDarkScheme.matches)) {
+            toggleTheme(true);
+        }
+
+        prefersDarkScheme.addEventListener('change', (e) => toggleTheme(e.matches));
+    });
+</script>

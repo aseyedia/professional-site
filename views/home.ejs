@@ -20,171 +20,153 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">
-        <a href="/" style="text-decoration: none; color: inherit;">
-            Arta Seyedian's Website
-        </a>
-    </h1>
+    <%- include('partials/header') %>
 
-    <header>
-        <button id="toggle-theme">Toggle Light/Dark Mode</button>
-    </header>
-
-    <div id="three-container"><a href="#about-me" class="down-arrow" aria-label="Scroll to About Me">&#x2193;</a></div>
-
-    <main id="about-me">
-        <h2>About Me</h2>
-        <p>Hello. My name is Arta Seyedian.</p>
-
-        <p>My career in tech began with a strong foundation in bioinformatics, which I approached with a biologist's
-            background<sup><a href="#ref1">1</a></sup><sup><a href="#ref2">2</a></sup>. Over the years, I've been
-            fortunate enough to explore various subfields and research niches, diving deep into the expansive world of
-            bioinformatics:</p>
-
-        <ul>
-            <li>Human evolutionary genomics (unpublished study on Neandertal sQTL introgression in
-                modern human DNA — ask me about it)</li>
-            <li>Psychiatric and neurological transcriptomics<sup><a href="#ref3">3</a></sup><sup><a
-                        href="#ref4">4</a></sup></li>
-            <li>Single-cell and spatial mapping of Castleman Disease<sup><a href="#ref5">5</a></sup>
-            </li>
-        </ul>
-
-
-        <p>Currently, I'm working as a contracted Web App Developer and Bioinformatics Engineer for <a
-                href="https://pedsnet.org/">PEDsnet</a>, a
-            large, inter-institutional pediatric clinical research data-sharing consortium. My role involves setting up
-            and customizing two instances of the open-source metadata repository <a
-                href="https://dspace.lyrasis.org/">DSpace</a> to
-            manage codesets (collections of codes used for a given clinical concept, such as diagnosis or procedure
-            codes). These repositories enable investigators around the world to collaboratively share pediatric
-            clinical research data.</p>
-
-        <p>I'm also updating, refining and optimizing already-existing computational pipelines that standardize large
-            pediatric clinical
-            datasets for analysis. Many of these pipelines were written years ago by developers who have since left the
-            project, so my role
-            involves understanding and rewriting these pipelines to ensure they are efficient and accurate. To do this,
-            I am working with Perl,
-            Python, Airflow and PostgreSQL to write new scripts and optimize existing ones. I am also using Docker to
-            containerize these pipelines and ensure
-            they are reproducible.
-        </p>
-
-        <h2>Skills</h2>
-        <div class="skills-accordion">
-            <div class="skill-category">
-                <button class="accordion">Programming & Data Analytics</button>
-                <div class="panel">
-                    <ul>
-                        <li>R, Python, Java, SQL</li>
-                        <li>Node.js, Angular, TypeScript</li>
-                        <li>JavaScript, HTML/CSS</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="skill-category">
-                <button class="accordion">R & Python Libraries</button>
-                <div class="panel">
-                    <ul>
-                        <li>ggplot2, Seurat, Bioconductor</li>
-                        <li>NumPy, pandas, ScanPy</li>
-                        <li>DESeq2, EdgeR</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="skill-category">
-                <button class="accordion">Other Technologies</button>
-                <div class="panel">
-                    <ul>
-                        <li>Distributed Computing: Slurm, Sun Grid Engine</li>
-                        <li>Cloud: Google Cloud, AWS</li>
-                        <li>Workflow: Prefect, NextFlow, Snakemake, Airflow</li>
-                        <li>Containerization: Docker</li>
-                    </ul>
-                </div>
-            </div>
+        <div id="three-container"><a href="#about-me" class="down-arrow" aria-label="Scroll to About Me">&#x2193;</a>
         </div>
 
-        <h2>Contact</h2>
-        <ul>
-            <li>Email: <a href="mailto:arta.seyedian@gmail.com">arta[dot]seyedian[at]gmail.com</a></li>
-            <li>GitHub: <a href="https://github.com/aseyedia">github.com/aseyedia</a></li>
-            <li>LinkedIn: <a href="https://www.linkedin.com/in/artaseyedian/">linkedin.com/in/artaseyedian</a></li>
-        </ul>
+        <main id="about-me">
+            <h2>About Me</h2>
+            <p>Hello. My name is Arta Seyedian.</p>
 
-        <h2>References</h2>
-        <ol class="references-list">
-            <li id="ref1"><a
-                    href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2017.00722/full">Pivotal
-                    Role of Adenosine Neurotransmission in Restless Legs Syndrome, 2018</a></li>
-            <li id="ref2"><a href="https://www.sciencedirect.com/science/article/pii/S1043661822004224">Pharmacological
-                    targeting of G protein-coupled receptor heteromers, 2022</a></li>
-            <li id="ref3"><a href="https://www.nature.com/articles/s41593-022-01024-6">Amygdala and anterior cingulate
-                    transcriptomes from individuals with bipolar disorder reveal downregulated neuroimmune and synaptic
-                    pathways, 2022</a></li>
-            <li id="ref4"><a href="https://www.science.org/doi/abs/10.1126/science.adh1938">A data-driven single-cell
-                    and spatial transcriptomic map of the human prefrontal cortex, 2024</a></li>
-            <li id="ref5"><a href="https://doi.org/10.1101/2024.09.09.609717">Spatial and Single Cell Mapping of
-                    Castleman Disease Reveals Key Stromal Cell Types and Cytokine Pathways, bioRxiv (2024)</a></li>
-        </ol>
+            <p>My career in tech began with a strong foundation in bioinformatics, which I approached with a biologist's
+                background<sup><a href="#ref1">1</a></sup><sup><a href="#ref2">2</a></sup>. Over the years, I've been
+                fortunate enough to explore various subfields and research niches, diving deep into the expansive world
+                of
+                bioinformatics:</p>
 
-    </main>
+            <ul>
+                <li>Human evolutionary genomics (unpublished study on Neandertal sQTL introgression in
+                    modern human DNA — ask me about it)</li>
+                <li>Psychiatric and neurological transcriptomics<sup><a href="#ref3">3</a></sup><sup><a
+                            href="#ref4">4</a></sup></li>
+                <li>Single-cell and spatial mapping of Castleman Disease<sup><a href="#ref5">5</a></sup>
+                </li>
+            </ul>
 
-    <script type="module" src="/js/three-widget.js"></script>
-    <script>
-        var acc = document.getElementsByClassName("accordion");
-        for (var i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleButton = document.getElementById('toggle-theme');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-            function toggleTheme(isDark) {
-                document.body.classList.toggle('dark-theme', isDark);
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            }
+            <p>Currently, I'm working as a contracted Web App Developer and Bioinformatics Engineer for <a
+                    href="https://pedsnet.org/">PEDsnet</a>, a
+                large, inter-institutional pediatric clinical research data-sharing consortium. My role involves setting
+                up
+                and customizing two instances of the open-source metadata repository <a
+                    href="https://dspace.lyrasis.org/">DSpace</a> to
+                manage codesets (collections of codes used for a given clinical concept, such as diagnosis or procedure
+                codes). These repositories enable investigators around the world to collaboratively share pediatric
+                clinical research data.</p>
 
-            toggleButton.addEventListener('click', () => {
-                const isDark = !document.body.classList.contains('dark-theme');
-                toggleTheme(isDark);
-            });
+            <p>I'm also updating, refining and optimizing already-existing computational pipelines that standardize
+                large
+                pediatric clinical
+                datasets for analysis. Many of these pipelines were written years ago by developers who have since left
+                the
+                project, so my role
+                involves understanding and rewriting these pipelines to ensure they are efficient and accurate. To do
+                this,
+                I am working with Perl,
+                Python, Airflow and PostgreSQL to write new scripts and optimize existing ones. I am also using Docker
+                to
+                containerize these pipelines and ensure
+                they are reproducible.
+            </p>
 
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark' || (savedTheme === null && prefersDarkScheme.matches)) {
-                toggleTheme(true);
-            }
+            <h2>Skills</h2>
+            <div class="skills-accordion">
+                <div class="skill-category">
+                    <button class="accordion">Programming & Data Analytics</button>
+                    <div class="panel">
+                        <ul>
+                            <li>R, Python, Java, SQL</li>
+                            <li>Node.js, Angular, TypeScript</li>
+                            <li>JavaScript, HTML/CSS</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <button class="accordion">R & Python Libraries</button>
+                    <div class="panel">
+                        <ul>
+                            <li>ggplot2, Seurat, Bioconductor</li>
+                            <li>NumPy, pandas, ScanPy</li>
+                            <li>DESeq2, EdgeR</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <button class="accordion">Other Technologies</button>
+                    <div class="panel">
+                        <ul>
+                            <li>Distributed Computing: Slurm, Sun Grid Engine</li>
+                            <li>Cloud: Google Cloud, AWS</li>
+                            <li>Workflow: Prefect, NextFlow, Snakemake, Airflow</li>
+                            <li>Containerization: Docker</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-            prefersDarkScheme.addListener((e) => toggleTheme(e.matches));
-        });
-        document.addEventListener('DOMContentLoaded', () => {
-            const downArrow = document.querySelector('.down-arrow');
-            const aboutMeSection = document.getElementById('about-me');
+            <h2>Contact</h2>
+            <ul>
+                <li>Email: <a href="mailto:arta.seyedian@gmail.com">arta[dot]seyedian[at]gmail.com</a></li>
+                <li>GitHub: <a href="https://github.com/aseyedia">github.com/aseyedia</a></li>
+                <li>LinkedIn: <a href="https://www.linkedin.com/in/artaseyedian/">linkedin.com/in/artaseyedian</a></li>
+            </ul>
 
-            downArrow.addEventListener('click', () => {
-                downArrow.style.display = 'none';
-            });
+            <h2>References</h2>
+            <ol class="references-list">
+                <li id="ref1"><a
+                        href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2017.00722/full">Pivotal
+                        Role of Adenosine Neurotransmission in Restless Legs Syndrome, 2018</a></li>
+                <li id="ref2"><a
+                        href="https://www.sciencedirect.com/science/article/pii/S1043661822004224">Pharmacological
+                        targeting of G protein-coupled receptor heteromers, 2022</a></li>
+                <li id="ref3"><a href="https://www.nature.com/articles/s41593-022-01024-6">Amygdala and anterior
+                        cingulate
+                        transcriptomes from individuals with bipolar disorder reveal downregulated neuroimmune and
+                        synaptic
+                        pathways, 2022</a></li>
+                <li id="ref4"><a href="https://www.science.org/doi/abs/10.1126/science.adh1938">A data-driven
+                        single-cell
+                        and spatial transcriptomic map of the human prefrontal cortex, 2024</a></li>
+                <li id="ref5"><a href="https://doi.org/10.1101/2024.09.09.609717">Spatial and Single Cell Mapping of
+                        Castleman Disease Reveals Key Stromal Cell Types and Cytokine Pathways, bioRxiv (2024)</a></li>
+            </ol>
 
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        downArrow.style.display = 'none';
+        </main>
+
+        <script type="module" src="/js/three-widget.js"></script>
+        <script>
+            var acc = document.getElementsByClassName("accordion");
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
                     }
                 });
-            }, { threshold: 0.5 });
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                const downArrow = document.querySelector('.down-arrow');
+                const aboutMeSection = document.getElementById('about-me');
 
-            observer.observe(aboutMeSection);
-        });
-    </script>
+                downArrow.addEventListener('click', () => {
+                    downArrow.style.display = 'none';
+                });
+
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            downArrow.style.display = 'none';
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                observer.observe(aboutMeSection);
+            });
+        </script>
 </body>
 
 </html>
