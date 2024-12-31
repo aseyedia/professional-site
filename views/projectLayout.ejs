@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title || 'Project Page' %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <%- include('partials/header') %>
+
+  <main>
+    <div id="markdown-content">
+      <%- content %>
+    </div>
+  </main>
+</body>
+
+</html>
