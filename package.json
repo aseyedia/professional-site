@@ -8,17 +8,17 @@
   },
   "dependencies": {
     "@splinetool/loader": "^1.9.15",
-    "express": "^4.19.2",
     "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "marked": "^15.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "three": "^0.165.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4",
     "@vitejs/plugin-react": "^1.3.2",
+    "nodemon": "^3.1.4",
     "vite": "^5.3.3"
   },
   "type": "module"
 }
-
