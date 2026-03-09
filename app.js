@@ -11,6 +11,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/funky', express.static(path.join(__dirname, '../funky-website/dist')));
+app.get('/funky/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../funky-website/dist', 'index.html'));
+});
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
