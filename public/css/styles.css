@@ -214,3 +214,30 @@ main {
 html {
     scroll-behavior: smooth;
 }
+
+#funky-portal {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    background: var(--bg-color);
+    padding: 5px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    text-decoration: none;
+    opacity: 0.2;
+    transition: opacity 0.4s ease, max-width 0.4s ease, background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 18px;
+    display: block;
+}
+
+#funky-portal:hover {
+    opacity: 1;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    max-width: 200px;
+    text-decoration: none;
+}
