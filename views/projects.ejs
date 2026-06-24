@@ -14,23 +14,61 @@
     <%- include('partials/header') %>
 
     <main id="projects">
-        <h2>My Projects</h2>
-        <div class="project-list">
-            <div class="project-item">
-                <h3><a href="/projects/twas-z">TWAS-Z</a></h3>
-                <!-- <p>A brief description of TWAS-Z.</p> -->
-            </div>
-            <!-- <div class="project-item">
-                <h3><a href="/projects/project2">Project Two</a></h3>
-                <p>A brief description of Project Two.</p>
-            </div>
-            <div class="project-item">
-                <h3><a href="/projects/project3">Project Three</a></h3>
-                <p>A brief description of Project Three.</p>
-            </div> -->
+        <h2>Projects</h2>
+
+        <div class="project-filters" role="group" aria-label="Filter projects by tag">
+            <button class="filter-btn active" data-filter="all">all</button>
+            <% tags.forEach(function (t) { %>
+                <button class="filter-btn" data-filter="<%= t %>"><%= t %></button>
+            <% }) %>
+        </div>
+
+        <% if (projects.length === 0) { %>
+            <p>No projects yet. Drop a <code>.md</code> file in <code>views/content/projects/</code>.</p>
+        <% } %>
+
+        <div class="project-grid">
+            <% projects.forEach(function (p) { %>
+                <%
+                    const href = p.externalUrl ? p.externalUrl : `/projects/${p.slug}`;
+                    const ext = Boolean(p.externalUrl);
+                %>
+                <a class="project-card"
+                   href="<%= href %>"
+                   data-tag="<%= p.tag %>"
+                   <%= ext ? 'target="_blank" rel="noopener"' : '' %>>
+                    <% if (p.thumbnail) { %>
+                        <div class="card-thumb">
+                            <img src="<%= p.thumbnail %>" alt="<%= p.title %> thumbnail" loading="lazy">
+                        </div>
+                    <% } %>
+                    <div class="card-body">
+                        <div class="card-head">
+                            <h3 class="card-title"><%= p.title %><% if (ext) { %> <span class="ext-arrow">↗</span><% } %></h3>
+                            <span class="card-tag tag-<%= p.tag %>"><%= p.tag %></span>
+                        </div>
+                        <% if (p.summary) { %><p class="card-summary"><%= p.summary %></p><% } %>
+                    </div>
+                </a>
+            <% }) %>
         </div>
     </main>
 
+    <script>
+        const buttons = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.project-card');
+        buttons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                buttons.forEach((b) => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                cards.forEach((card) => {
+                    const show = filter === 'all' || card.dataset.tag === filter;
+                    card.style.display = show ? '' : 'none';
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
