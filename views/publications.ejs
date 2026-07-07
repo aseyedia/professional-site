@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <title>Arta's Publications</title>
+</head>
+
+<body>
+    <%- include('partials/header') %>
+
+        <main id="publications">
+            <h2>Publications</h2>
+
+            <% if (publications.length===0) { %>
+                <p>No writeups yet.</p>
+                <% } %>
+
+                    <div class="pub-list">
+                        <% publications.forEach(function (p) { %>
+                            <article class="pub-entry">
+                                <div class="pub-head">
+                                    <h3 class="pub-title">
+                                        <a href="<%= p.externalUrl %>" target="_blank" rel="noopener">
+                                            <%= p.title %>
+                                        </a>
+                                    </h3>
+                                    <br>
+                                </div>
+                                <div class="pub-meta">
+                                    <% if (p.journal) { %><span class="pub-journal">
+                                            <%= p.journal %>
+                                        </span>
+                                        <% } %>
+                                            <% if (p.date) { %><span class="pub-date">
+                                                    <%= new Date(p.date).toLocaleDateString('en-US', { year: 'numeric' ,
+                                                        month: 'short' , day: 'numeric' }) %>
+                                                </span>
+                                                <% } %>
+                                </div>
+
+                                <% if (p.abstract) { %>
+                                    <p class="pub-abstract">
+                                        <%= p.abstract %>
+                                    </p>
+                                    <% } %>
+
+                                        <% if (p.role) { %>
+                                            <div class="pub-role">
+                                                <span class="pub-role-label">My Contribution</span>
+                                                <p><%- p.role %></p>
+                                            </div>
+                                            <% } %>
+
+                                                <a class="pub-link" href="<%= p.externalUrl %>" target="_blank"
+                                                    rel="noopener">View publication &#8599;</a>
+                            </article>
+                            <% }) %>
+                    </div>
+        </main>
+</body>
+
+</html>

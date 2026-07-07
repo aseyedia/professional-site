@@ -12,6 +12,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const PROJECTS_DIR = path.join(__dirname, 'views', 'content', 'projects');
+const REPORTS_DIR = path.join(__dirname, 'views', 'content', 'reports');
 const VALID_TAGS = ['code', 'research', 'work', 'misc'];
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -39,7 +40,11 @@ function readProject(slug) {
     summary: data.summary || '',
     thumbnail: data.thumbnail || null,
     externalUrl: data.externalUrl || null,
+    reportHtml: data.reportHtml || null,
     date: data.date || null,
+    journal: data.journal || null,
+    abstract: data.abstract || null,
+    role: data.role || null,
     body: content,
   };
 }
@@ -65,12 +70,36 @@ app.get('/', (req, res) => {
 });
 
 app.get('/projects', (req, res) => {
-  res.render('projects', { projects: listProjects(), tags: VALID_TAGS });
+  const projects = listProjects();
+  // Only show filter buttons for tags that actually have a project — an
+  // empty "code" button that filters to nothing is worse than no button.
+  const tags = VALID_TAGS.filter((t) => projects.some((p) => p.tag === t));
+  res.render('projects', { projects, tags });
+});
+
+app.get('/publications', (req, res) => {
+  // Publications are research-tagged projects with a `role` writeup —
+  // papers without one (no summary provided yet) stay out of this page
+  // but still show up in the general /projects research filter.
+  const publications = listProjects().filter((p) => p.tag === 'research' && p.role);
+  res.render('publications', { publications });
 });
 
 app.get('/projects/:projectName', (req, res) => {
   const project = readProject(req.params.projectName);
   if (!project) return res.status(404).send('Project not found!');
+
+  if (project.reportHtml) {
+    const reportPath = path.join(REPORTS_DIR, project.reportHtml);
+    // Guard against path traversal via frontmatter.
+    if (!reportPath.startsWith(REPORTS_DIR + path.sep)) {
+      return res.status(400).send('Invalid report path');
+    }
+    if (!fs.existsSync(reportPath)) {
+      return res.status(404).send('Project report not found!');
+    }
+    return res.sendFile(reportPath);
+  }
 
   res.render('projectLayout', {
     title: project.title,

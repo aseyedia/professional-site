@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LnDv2 — Refactor Impact</title><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script><style>
+:root{--bg:#0a0c12;--surf:#15171f;--surf2:#1a1d2e;--bdr:#2d3148;--txt:#e2e8f0;--muted:#64748b;--faint:#475569;--acc:#818cf8;--grn:#34d399;--red:#f87171;--gold:#fbbf24;--cyan:#7dd3fc;--grid:#1e2235;}
+:root[data-theme=light]{--bg:#f7f8fa;--surf:#fff;--surf2:#f0f2f7;--bdr:#e2e6ee;--txt:#1e293b;--muted:#64748b;--faint:#94a3b8;--acc:#4f46e5;--grn:#059669;--red:#dc2626;--gold:#b45309;--cyan:#0369a1;--grid:#e8ebf2;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt);padding:28px 32px;max-width:1200px;margin-left:auto;margin-right:auto}
+#tbar{position:sticky;top:0;z-index:99;display:flex;justify-content:flex-end;gap:8px;padding:8px 0;background:var(--bg)}
+.tbtn{background:var(--surf);color:var(--txt);border:1px solid var(--bdr);border-radius:8px;padding:6px 14px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit}
+.tbtn:hover{border-color:var(--acc)}
+.scale-toggle{display:inline-flex;gap:2px;background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:2px;flex-shrink:0}
+.scale-btn{background:transparent;color:var(--muted);border:0;border-radius:4px;padding:3px 9px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;font-family:inherit}
+.scale-btn.active{background:var(--acc);color:#fff}
+.scale-btn:hover:not(.active){color:var(--txt)}
+.eyebrow{font-size:.72rem;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;margin-bottom:8px}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:8px}
+h2{font-size:1.25rem;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.lead{font-size:1rem;line-height:1.7;opacity:.92;margin-bottom:10px}
+.sub{font-size:.85rem;color:var(--muted);line-height:1.6}
+hr{height:1px;background:var(--bdr);border:0;margin:32px 0 24px}
+.act{font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.stat{background:linear-gradient(135deg,var(--surf2),var(--surf));border:1px solid var(--bdr);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.stat.gold::after{background:var(--gold)}.stat.grn::after{background:var(--grn)}.stat.red::after{background:var(--red)}.stat.blue::after{background:var(--acc)}
+.val{font-size:2.3rem;font-weight:800;line-height:1;letter-spacing:-.03em}
+.stat.gold .val{color:var(--gold)}.stat.grn .val{color:var(--grn)}.stat.red .val{color:var(--red)}.stat.blue .val{color:var(--acc)}
+.lbl{font-size:.72rem;color:var(--muted);margin-top:7px;text-transform:uppercase;letter-spacing:.04em;line-height:1.3}
+.callout{background:var(--surf);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:10px;padding:18px 24px;margin:24px 0;font-size:.95rem;line-height:1.7}
+.callout strong{color:var(--acc)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:20px 0}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px}
+.ct{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.cc{font-size:.72rem;color:var(--faint);margin-bottom:12px;line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{text-align:left;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--bdr);font-size:.69rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:8px 10px;border-bottom:1px solid var(--grid);color:var(--txt)}
+tr:last-child td{border-bottom:none}
+.site{font-weight:700;color:var(--txt);white-space:nowrap}
+.badge{display:inline-block;background:var(--surf2);color:var(--cyan);padding:2px 8px;border-radius:5px;font-size:.71rem;font-weight:600;font-family:ui-monospace,monospace;border:1px solid var(--bdr)}
+.v1{color:var(--red)}.v2{color:var(--grn)}.sp{color:var(--gold);font-weight:700}
+.c{color:var(--red);font-weight:700}.g{color:var(--grn);font-weight:700}
+tr.gr{opacity:.38}
+.bmiz{color:#818cf8;font-weight:700;font-size:.72rem}.htz{color:#fb923c;font-weight:700;font-size:.72rem}.wtz{color:#a78bfa;font-weight:700;font-size:.72rem}
+code{background:var(--surf2);padding:1px 5px;border-radius:3px;font-size:.82em}
+a,a:visited{color:var(--acc);text-decoration:underline;text-decoration-color:rgba(129,140,248,.4)}
+a:hover,a:visited:hover{color:var(--gold)}
+</style></head><body>
+<div id="tbar"><button class="tbtn" onclick="setTheme('dark')">&#9789; Dark</button><button class="tbtn" onclick="setTheme('light')">&#9728; Light</button></div>
+<div class="eyebrow">Production Pipeline Migration &middot; PEDSnet Data Coordinating Center</div>
+<h1>Refactoring <span style="color:var(--acc)">load_and_derivation</span>: Perl &rarr; Trino</h1>
+<p class="lead">A decade-old Perl/PostgreSQL derivation pipeline, re-architected on Apache Trino. Measured head-to-head on <strong>identical site submissions</strong> — same site, same quarterly release, same submission file — so every comparison is like-for-like. The result was not only a large speedup: the two pipelines produced materially different outputs, and the rewrite's were correct where the legacy pipeline's were not.</p>
+<div class="callout" style="font-size:.85rem;padding:14px 20px;margin:16px 0"><strong>Note:</strong> Site identities are anonymized to respect institutional data governance. The findings, magnitudes, and methodology below are unchanged.</div>
+<div class="hero">
+  <div class="stat gold"><div class="val">256&times;</div><div class="lbl">Matched-pair median speedup<br>per task</div></div>
+  <div class="stat red"><div class="val">1,665h</div><div class="lbl">Legacy compute<br>matched runs</div></div>
+  <div class="stat grn"><div class="val">5.6h</div><div class="lbl">Trino compute<br>matched runs</div></div>
+  <div class="stat blue"><div class="val">1,659h</div><div class="lbl">Compute-hours<br>eliminated</div></div>
+</div>
+<p class="sub">Scope: <strong style="color:var(--txt)">86 matched task-runs</strong> across <strong style="color:var(--txt)">10 production hospital sites</strong> spanning two consecutive quarterly releases (v61+v62). Four tasks: BMI, BMI-Z, Height-Z, Weight-Z. Matched-pair wall-clock compute falls <strong style="color:var(--gold)">284&times;</strong> (1,664.5h &rarr; 5.6h).</p>
+
+<hr>
+<div class="act">Part I: How long it used to take</div>
+<h2>The legacy pipeline measured runtimes in days, not minutes.</h2>
+<p class="lead">On the largest sites, a single BMI or z-score task could run for two to three days. The Trino rewrite collapses those multi-day runs into minutes or seconds.</p>
+<p class="sub" style="margin-bottom:16px">On a linear axis, the Trino (green) bars are nearly invisible next to the Perl (red) ones. Toggle to log scale on the chart below if you want to read the exact Trino runtimes.</p>
+<div class="card" style="margin-bottom:20px"><div class="ct" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><span>BMI Task Runtime: v1 vs v2, All Sites</span><span style="display:flex;gap:6px"><span id="logChartStackToggle" class="scale-toggle"></span><span id="logChartToggle" class="scale-toggle"></span></span></div><div class="cc">Each site shows one bar for Perl (red) and one for Trino (green). Toggle Total for a single clean bar per pipeline, or Split to break each out into its v61/v62 halves. Hover any bar for exact values.</div><canvas id="logChart" height="120"></canvas></canvas></div>
+<div class="grid2">
+  <div class="card"><div class="ct">Median Speedup by Task</div><div class="cc">Across all matched submissions.</div><canvas id="taskChart" height="200"></canvas></div>
+  <div class="card"><div class="ct">Legacy Compute Burden by Site</div><div class="cc">Total v1 hours, stacked by quarterly release — heaviest first.</div><canvas id="siteChart" height="200"></canvas></div>
+</div>
+<div class="card" style="margin-top:20px"><div class="ct">Full Head-to-Head — Every Matched Submission</div>
+  <div style="overflow:auto;max-height:480px"><table><thead style="position:sticky;top:0;background:var(--surf)"><tr><th>Site</th><th>Submission</th><th>Task</th><th class="num">v1 Perl</th><th class="num">v2 Trino</th><th class="num">Speedup</th></tr></thead><tbody><tr><td class="site" rowspan="4">Site E</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">16.24h</td><td class="num v2">0.040h</td><td class="num sp">406x</td></tr><tr><td>BMI-Z</td><td class="num v1">10.42h</td><td class="num v2">0.070h</td><td class="num sp">149x</td></tr><tr><td>Height-Z</td><td class="num v1">10.91h</td><td class="num v2">0.070h</td><td class="num sp">156x</td></tr><tr><td>Weight-Z</td><td class="num v1">19.04h</td><td class="num v2">0.100h</td><td class="num sp">190x</td></tr><tr><td class="site" rowspan="4">Site E</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">15.93h</td><td class="num v2">0.040h</td><td class="num sp">398x</td></tr><tr><td>BMI-Z</td><td class="num v1">10.42h</td><td class="num v2">0.090h</td><td class="num sp">116x</td></tr><tr><td>Height-Z</td><td class="num v1">9.62h</td><td class="num v2">0.050h</td><td class="num sp">192x</td></tr><tr><td>Weight-Z</td><td class="num v1">19.28h</td><td class="num v2">0.100h</td><td class="num sp">193x</td></tr><tr><td class="site" rowspan="4">Site F</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">35.65h</td><td class="num v2">0.060h</td><td class="num sp">594x</td></tr><tr><td>BMI-Z</td><td class="num v1">23.35h</td><td class="num v2">0.090h</td><td class="num sp">259x</td></tr><tr><td>Height-Z</td><td class="num v1">25.46h</td><td class="num v2">0.150h</td><td class="num sp">170x</td></tr><tr><td>Weight-Z</td><td class="num v1">45.35h</td><td class="num v2">0.130h</td><td class="num sp">349x</td></tr><tr><td class="site" rowspan="4">Site F</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">36.03h</td><td class="num v2">0.040h</td><td class="num sp">901x</td></tr><tr><td>BMI-Z</td><td class="num v1">24.87h</td><td class="num v2">0.150h</td><td class="num sp">166x</td></tr><tr><td>Height-Z</td><td class="num v1">24.63h</td><td class="num v2">0.160h</td><td class="num sp">154x</td></tr><tr><td>Weight-Z</td><td class="num v1">42.02h</td><td class="num v2">0.310h</td><td class="num sp">136x</td></tr><tr><td class="site" rowspan="4">Site G</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">16.08h</td><td class="num v2">0.045h</td><td class="num sp">357x</td></tr><tr><td>BMI-Z</td><td class="num v1">10.29h</td><td class="num v2">0.055h</td><td class="num sp">187x</td></tr><tr><td>Height-Z</td><td class="num v1">9.85h</td><td class="num v2">0.085h</td><td class="num sp">116x</td></tr><tr><td>Weight-Z</td><td class="num v1">20.08h</td><td class="num v2">0.105h</td><td class="num sp">191x</td></tr><tr><td class="site" rowspan="4">Site G</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">15.70h</td><td class="num v2">0.030h</td><td class="num sp">523x</td></tr><tr><td>BMI-Z</td><td class="num v1">10.59h</td><td class="num v2">0.060h</td><td class="num sp">176x</td></tr><tr><td>Height-Z</td><td class="num v1">10.07h</td><td class="num v2">0.050h</td><td class="num sp">201x</td></tr><tr><td>Weight-Z</td><td class="num v1">20.11h</td><td class="num v2">0.130h</td><td class="num sp">155x</td></tr><tr><td class="site" rowspan="4">Site J</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">10.50h</td><td class="num v2">0.020h</td><td class="num sp">525x</td></tr><tr><td>BMI-Z</td><td class="num v1">7.30h</td><td class="num v2">0.025h</td><td class="num sp">292x</td></tr><tr><td>Height-Z</td><td class="num v1">8.77h</td><td class="num v2">0.030h</td><td class="num sp">292x</td></tr><tr><td>Weight-Z</td><td class="num v1">11.79h</td><td class="num v2">0.025h</td><td class="num sp">472x</td></tr><tr><td class="site" rowspan="4">Site J</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">9.91h</td><td class="num v2">0.010h</td><td class="num sp">991x</td></tr><tr><td>BMI-Z</td><td class="num v1">7.23h</td><td class="num v2">0.087h</td><td class="num sp">83x</td></tr><tr><td>Height-Z</td><td class="num v1">8.15h</td><td class="num v2">0.037h</td><td class="num sp">222x</td></tr><tr><td>Weight-Z</td><td class="num v1">11.81h</td><td class="num v2">0.047h</td><td class="num sp">253x</td></tr><tr><td class="site" rowspan="4">Site H</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">34.63h</td><td class="num v2">0.045h</td><td class="num sp">770x</td></tr><tr><td>BMI-Z</td><td class="num v1">17.61h</td><td class="num v2">0.070h</td><td class="num sp">252x</td></tr><tr><td>Height-Z</td><td class="num v1">18.66h</td><td class="num v2">0.075h</td><td class="num sp">249x</td></tr><tr><td>Weight-Z</td><td class="num v1">34.44h</td><td class="num v2">0.085h</td><td class="num sp">405x</td></tr><tr><td class="site" rowspan="4">Site H</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">36.06h</td><td class="num v2">0.020h</td><td class="num sp">1803x</td></tr><tr><td>BMI-Z</td><td class="num v1">17.74h</td><td class="num v2">0.070h</td><td class="num sp">253x</td></tr><tr><td>Height-Z</td><td class="num v1">18.13h</td><td class="num v2">0.170h</td><td class="num sp">107x</td></tr><tr><td>Weight-Z</td><td class="num v1">35.98h</td><td class="num v2">0.120h</td><td class="num sp">300x</td></tr><tr><td class="site" rowspan="4">Site A</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">21.51h</td><td class="num v2">0.070h</td><td class="num sp">307x</td></tr><tr><td>BMI-Z</td><td class="num v1">13.36h</td><td class="num v2">0.085h</td><td class="num sp">157x</td></tr><tr><td>Height-Z</td><td class="num v1">13.70h</td><td class="num v2">0.125h</td><td class="num sp">110x</td></tr><tr><td>Weight-Z</td><td class="num v1">28.92h</td><td class="num v2">0.135h</td><td class="num sp">214x</td></tr><tr><td class="site" rowspan="4">Site A</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">19.27h</td><td class="num v2">0.020h</td><td class="num sp">964x</td></tr><tr><td>BMI-Z</td><td class="num v1">12.46h</td><td class="num v2">0.080h</td><td class="num sp">156x</td></tr><tr><td>Height-Z</td><td class="num v1">13.79h</td><td class="num v2">0.080h</td><td class="num sp">172x</td></tr><tr><td>Weight-Z</td><td class="num v1">22.06h</td><td class="num v2">0.100h</td><td class="num sp">221x</td></tr><tr><td class="site" rowspan="4">Site C</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">30.96h</td><td class="num v2">0.035h</td><td class="num sp">885x</td></tr><tr><td>BMI-Z</td><td class="num v1">20.79h</td><td class="num v2">0.045h</td><td class="num sp">462x</td></tr><tr><td>Height-Z</td><td class="num v1">23.89h</td><td class="num v2">0.070h</td><td class="num sp">341x</td></tr><tr><td>Weight-Z</td><td class="num v1">34.85h</td><td class="num v2">0.070h</td><td class="num sp">498x</td></tr><tr><td class="site" rowspan="4">Site C</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">33.22h</td><td class="num v2">0.040h</td><td class="num sp">830x</td></tr><tr><td>BMI-Z</td><td class="num v1">20.78h</td><td class="num v2">0.100h</td><td class="num sp">208x</td></tr><tr><td>Height-Z</td><td class="num v1">26.43h</td><td class="num v2">0.160h</td><td class="num sp">165x</td></tr><tr><td>Weight-Z</td><td class="num v1">36.99h</td><td class="num v2">0.080h</td><td class="num sp">462x</td></tr><tr><td class="site" rowspan="4">Site D</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">8.51h</td><td class="num v2">0.030h</td><td class="num sp">284x</td></tr><tr><td>BMI-Z</td><td class="num v1">5.75h</td><td class="num v2">0.030h</td><td class="num sp">192x</td></tr><tr><td>Height-Z</td><td class="num v1">5.78h</td><td class="num v2">0.030h</td><td class="num sp">193x</td></tr><tr><td>Weight-Z</td><td class="num v1">9.15h</td><td class="num v2">0.050h</td><td class="num sp">183x</td></tr><tr><td class="site" rowspan="4">Site D</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">6.74h</td><td class="num v2">0.020h</td><td class="num sp">337x</td></tr><tr><td>BMI-Z</td><td class="num v1">5.12h</td><td class="num v2">0.100h</td><td class="num sp">51x</td></tr><tr><td>Height-Z</td><td class="num v1">5.02h</td><td class="num v2">0.030h</td><td class="num sp">167x</td></tr><tr><td>Weight-Z</td><td class="num v1">7.51h</td><td class="num v2">0.030h</td><td class="num sp">250x</td></tr><tr><td class="site" rowspan="4">Site I</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">11.29h</td><td class="num v2">0.020h</td><td class="num sp">564x</td></tr><tr><td>BMI-Z</td><td class="num v1">6.82h</td><td class="num v2">0.020h</td><td class="num sp">341x</td></tr><tr><td>Height-Z</td><td class="num v1">10.65h</td><td class="num v2">0.020h</td><td class="num sp">532x</td></tr><tr><td>Weight-Z</td><td class="num v1">11.29h</td><td class="num v2">0.020h</td><td class="num sp">564x</td></tr><tr><td class="site" rowspan="4">Site I</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">11.82h</td><td class="num v2">0.010h</td><td class="num sp">1182x</td></tr><tr><td>BMI-Z</td><td class="num v1">7.60h</td><td class="num v2">0.090h</td><td class="num sp">84x</td></tr><tr><td>Height-Z</td><td class="num v1">11.25h</td><td class="num v2">0.060h</td><td class="num sp">188x</td></tr><tr><td>Weight-Z</td><td class="num v1">11.83h</td><td class="num v2">0.080h</td><td class="num sp">148x</td></tr><tr><td class="site" rowspan="4">Site B</td><td rowspan="4"><span class="badge">v61_s2</span></td><td>BMI</td><td class="num v1">55.66h</td><td class="num v2">0.023h</td><td class="num sp">2444x</td></tr><tr><td>BMI-Z</td><td class="num v1">33.52h</td><td class="num v2">0.083h</td><td class="num sp">406x</td></tr><tr><td>Height-Z</td><td class="num v1">35.78h</td><td class="num v2">0.072h</td><td class="num sp">495x</td></tr><tr><td>Weight-Z</td><td class="num v1">60.84h</td><td class="num v2">0.095h</td><td class="num sp">639x</td></tr><tr><td class="site" rowspan="4">Site B</td><td rowspan="4"><span class="badge">v62_s2</span></td><td>BMI</td><td class="num v1">59.76h</td><td class="num v2">0.014h</td><td class="num sp">4137x</td></tr><tr><td>BMI-Z</td><td class="num v1">35.88h</td><td class="num v2">0.128h</td><td class="num sp">281x</td></tr><tr><td>Height-Z</td><td class="num v1">38.45h</td><td class="num v2">0.054h</td><td class="num sp">714x</td></tr><tr><td>Weight-Z</td><td class="num v1">64.78h</td><td class="num v2">0.072h</td><td class="num sp">897x</td></tr></tbody></table></div>
+</div>
+
+<hr>
+</div>
+
+<div class="card" style="margin:20px 0">
+  <div class="ct">Why the Rewrite Is Faster</div>
+  <p class="lead" style="margin-top:8px">The legacy pipeline's runtime was a direct consequence of its execution architecture. Anthropometric derivations ran as interpreted Perl inside of a Docker container, itself executed inside a Python 2.7 Docker container, which made per-patient database round trips: each person's height and weight records were fetched individually, the BMI and z-score calculations were performed row by row in memory, and results were written back to PostgreSQL in batches of 1,000 rows. This architecture required one query cycle per patient and one write cycle per batch, repeated across the full patient population at each site.</p>
+  <p class="lead" style="margin-top:10px">The rewrite replaces this with a single set-based SQL statement executed natively in Trino against columnar storage. The per-patient query loop and the interpreted row-by-row computation are both eliminated; the derivation logic is expressed once and applied to the full dataset in one execution. This architectural change accounts for the bulk of the runtime reduction.</p>
+</div>
+
+<hr>
+<div class="act">Part II: What it was producing</div>
+<h2>Input validity across the three z-score derivations.</h2>
+<p class="lead">The legacy pipeline processed inputs that did not meet validity criteria — unit-mismatched heights, out-of-range weights, measurements for infants too young to score — and published z-scores computed from them. This affected <strong>all three z-score types</strong> at every site. A valid z-score distribution has mean &asymp; 0 and standard deviation &asymp; 1.</p>
+<p class="lead" style="margin-bottom:16px">The rewrite enforces <a href="https://www.cdc.gov/growth-chart-training/hcp/computer-programs/sas.html" target="_blank" rel="noopener noreferrer" class="cdc-link">CDC modified-z screening bounds</a> at the input. Held to those same published thresholds, <strong>zero rows breached screening in v2 at any of the ten sites</strong> — versus roughly <strong>3.7 million</strong> breaching rows the legacy pipeline published.</p>
+<div class="grid3">
+  <div class="card"><div class="ct" style="display:flex;justify-content:space-between;align-items:center">BMI-Z Std Deviation<span id="sdBmizToggle" class="scale-toggle"></span></div><div class="cc">Log scale. Should be ~1. v1 peaks at 97 billion.</div><canvas id="sdBmiz" height="240"></canvas></div>
+  <div class="card"><div class="ct" style="display:flex;justify-content:space-between;align-items:center">Height-Z Std Deviation<span id="sdHtzToggle" class="scale-toggle"></span></div><div class="cc">Log scale. Should be ~1. v1 peaks at 2,879.</div><canvas id="sdHtz" height="240"></canvas></div>
+  <div class="card"><div class="ct" style="display:flex;justify-content:space-between;align-items:center">Weight-Z Std Deviation<span id="sdWtzToggle" class="scale-toggle"></span></div><div class="cc">Log scale. Should be ~1. v1 peaks at 12.6 million.</div><canvas id="sdWtz" height="240"></canvas></div>
+</div>
+<div class="card" style="margin:20px 0"><div class="ct">Height-Z Extreme Values (|z| &gt; 10) — v1 vs v2 by Site</div>
+  <div class="cc">v2 produced <strong style="color:var(--grn)">zero</strong> Height-Z values above |z|=10 at every single site. The legacy pipeline produced thousands to hundreds of thousands.</div>
+  <canvas id="htExt" height="130"></canvas></div>
+<div class="card" style="margin:20px 0"><div class="ct">Weight-Z Extreme Values (|z| &gt; 10) — v1 vs v2 by Site</div>
+  <div class="cc">Weight-Z doesn't collapse to zero the way Height-Z does — biologically extreme but screening-valid weights and heights are retained by design — yet the rewrite still cuts extreme values by one to two orders of magnitude at every site.</div>
+  <canvas id="wtExt" height="130"></canvas></div>
+<div class="card" style="margin:20px 0"><div class="ct">Derived Rows by Concept — All Four Outputs, All Sites</div>
+  <div class="cc">The rewrite publishes fewer rows across all four output types. The gap is screened-out garbage, not lost signal — valid measurements are preserved.</div>
+  <canvas id="rowChart" height="130"></canvas></div>
+<div class="card" style="margin:20px 0"><div class="ct">Comprehensive QC Table — All Three Z-Score Types, All Sites</div>
+  <div class="cc"><span class="bmiz">■ BMI-Z</span> &nbsp; <span class="htz">■ Height-Z</span> &nbsp; <span class="wtz">■ Weight-Z</span> &nbsp;&nbsp; Red = v1 (corrupt). Green = v2 (valid). Biologically Implausible Value (BIV) cutoffs: BMI-Z &rarr; source BMI &lt;5 or &gt;100&nbsp;kg/m²; Height-Z &rarr; modified-z &lt;&minus;5 or &gt;4; Weight-Z &rarr; modified-z &lt;&minus;5 or &gt;8. ⚑ = Site H's known pre-v62 source data issue (corrected in source for v62; legacy output still reflects it).</div>
+  <div style="overflow-x:auto"><table><thead>
+    <tr><th rowspan="2">Site</th><th rowspan="2">Type</th><th class="num" colspan="2">Mean z</th><th class="num" colspan="2">Std dev</th><th class="num" colspan="2">|z|&gt;10</th><th class="num" colspan="2">Infant BMI-Z (&lt;24mo)</th><th class="num" colspan="2">Biologically Implausible Values</th></tr>
+    <tr><th class="num" style="color:var(--red)">v1</th><th class="num" style="color:var(--grn)">v2</th><th class="num" style="color:var(--red)">v1</th><th class="num" style="color:var(--grn)">v2</th><th class="num" style="color:var(--red)">v1</th><th class="num" style="color:var(--grn)">v2</th><th class="num" style="color:var(--red)">v1</th><th class="num" style="color:var(--grn)">v2</th><th class="num" style="color:var(--red)">v1</th><th class="num" style="color:var(--grn)">v2</th></tr>
+  </thead><tbody><tr><td class="site" rowspan="3">Site E</td><td class="bmiz">BMI-Z</td><td class="num c">-8.4k</td><td class="num g">+0.52</td><td class="num c">9.9M</td><td class="num g">1.35</td><td class="num c">3,963</td><td class="num g">1,122</td><td class="num c">102</td><td class="num g">0</td><td class="num c">10,609</td><td class="num g">253</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.17</td><td class="num g">-0.09</td><td class="num c">3.52</td><td class="num g">1.31</td><td class="num c">11,598</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">63,111</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">-0.28</td><td class="num g">+0.14</td><td class="num c">812.98</td><td class="num g">1.51</td><td class="num c">4,925</td><td class="num g">821</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">74,358</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site F</td><td class="bmiz">BMI-Z</td><td class="num c">-2.0k</td><td class="num g">+0.38</td><td class="num c">4.0M</td><td class="num g">1.22</td><td class="num c">4,108</td><td class="num g">1,093</td><td class="num c">349</td><td class="num g">0</td><td class="num c">12,140</td><td class="num g">308</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.04</td><td class="num g">-0.01</td><td class="num c">10.28</td><td class="num g">1.18</td><td class="num c">19,665</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">89,030</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">8.28</td><td class="num g">+0.09</td><td class="num c">10.3k</td><td class="num g">1.34</td><td class="num c">6,822</td><td class="num g">601</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">100,841</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site G</td><td class="bmiz">BMI-Z</td><td class="num c">-118.3k</td><td class="num g">+0.25</td><td class="num c">122.3M</td><td class="num g">1.39</td><td class="num c">4,594</td><td class="num g">1,522</td><td class="num c">28</td><td class="num g">0</td><td class="num c">7,912</td><td class="num g">615</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.29</td><td class="num g">-0.24</td><td class="num c">18.52</td><td class="num g">1.29</td><td class="num c">11,488</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">60,959</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">1.84</td><td class="num g">-0.17</td><td class="num c">7.4k</td><td class="num g">1.51</td><td class="num c">6,339</td><td class="num g">662</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">81,098</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site J</td><td class="bmiz">BMI-Z</td><td class="num c">-15.0M</td><td class="num g">+0.42</td><td class="num c">29.8B</td><td class="num g">1.36</td><td class="num c">2,442</td><td class="num g">893</td><td class="num c">25</td><td class="num g">0</td><td class="num c">4,444</td><td class="num g">82</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.14</td><td class="num g">-0.09</td><td class="num c">9.55</td><td class="num g">1.31</td><td class="num c">8,560</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">46,262</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">1.88</td><td class="num g">+0.11</td><td class="num c">1.2k</td><td class="num g">1.49</td><td class="num c">3,418</td><td class="num g">753</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">38,443</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site H</td><td class="bmiz">BMI-Z</td><td class="num c">-97.7M</td><td class="num g">-0.09</td><td class="num c">97.2B</td><td class="num g">3.73</td><td class="num c">633,136</td><td class="num g">192,588</td><td class="num c">0</td><td class="num g">0</td><td class="num c">3,256,718</td><td class="num g">3,063</td></tr><tr><td class="htz">Height-Z</td><td class="num c">2.35</td><td class="num g">+0.08</td><td class="num c">182.57</td><td class="num g">1.23</td><td class="num c">761,846</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">868,839⚑</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">-0.02</td><td class="num g">+0.09</td><td class="num c">257.89</td><td class="num g">1.77</td><td class="num c">160,399</td><td class="num g">15,513</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">680,417⚑</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site A</td><td class="bmiz">BMI-Z</td><td class="num c">-17.8M</td><td class="num g">+0.55</td><td class="num c">21.4B</td><td class="num g">1.35</td><td class="num c">28,771</td><td class="num g">1,629</td><td class="num c">80</td><td class="num g">0</td><td class="num c">36,526</td><td class="num g">1,587</td></tr><tr><td class="htz">Height-Z</td><td class="num c">0.85</td><td class="num g">-0.02</td><td class="num c">2.9k</td><td class="num g">1.29</td><td class="num c">55,506</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">161,448</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">-6.66</td><td class="num g">+0.08</td><td class="num c">24.0k</td><td class="num g">1.62</td><td class="num c">92,854</td><td class="num g">669</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">244,157</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site C</td><td class="bmiz">BMI-Z</td><td class="num c">-278.34</td><td class="num g">+0.49</td><td class="num c">767.7k</td><td class="num g">1.34</td><td class="num c">8,292</td><td class="num g">3,297</td><td class="num c">1,601</td><td class="num g">0</td><td class="num c">9,214</td><td class="num g">629</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.12</td><td class="num g">-0.01</td><td class="num c">3.32</td><td class="num g">1.24</td><td class="num c">30,355</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">165,758</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">0.53</td><td class="num g">+0.18</td><td class="num c">670.29</td><td class="num g">1.42</td><td class="num c">10,899</td><td class="num g">1,565</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">216,663</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site D</td><td class="bmiz">BMI-Z</td><td class="num c">-1.6k</td><td class="num g">+0.40</td><td class="num c">1.4M</td><td class="num g">1.33</td><td class="num c">1,740</td><td class="num g">537</td><td class="num c">12</td><td class="num g">0</td><td class="num c">4,115</td><td class="num g">51</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.20</td><td class="num g">-0.12</td><td class="num c">27.59</td><td class="num g">1.31</td><td class="num c">5,331</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">31,874</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">11.14</td><td class="num g">-0.01</td><td class="num c">2.7k</td><td class="num g">1.55</td><td class="num c">4,252</td><td class="num g">882</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">39,273</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site I</td><td class="bmiz">BMI-Z</td><td class="num c">-128.8M</td><td class="num g">+0.27</td><td class="num c">87.3B</td><td class="num g">1.35</td><td class="num c">3,728</td><td class="num g">967</td><td class="num c">136</td><td class="num g">0</td><td class="num c">72,051</td><td class="num g">830</td></tr><tr><td class="htz">Height-Z</td><td class="num c">0.46</td><td class="num g">-0.05</td><td class="num c">319.13</td><td class="num g">1.25</td><td class="num c">11,241</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">55,399</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">4.8k</td><td class="num g">-0.14</td><td class="num c">12.6M</td><td class="num g">1.49</td><td class="num c">64,851</td><td class="num g">425</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">116,524</td><td class="num g">0</td></tr><tr><td class="site" rowspan="3">Site B</td><td class="bmiz">BMI-Z</td><td class="num c">-239.15</td><td class="num g">+0.46</td><td class="num c">896.2k</td><td class="num g">1.28</td><td class="num c">7,727</td><td class="num g">2,505</td><td class="num c">2,409</td><td class="num g">0</td><td class="num c">12,670</td><td class="num g">1,313</td></tr><tr><td class="htz">Height-Z</td><td class="num c">-0.03</td><td class="num g">+0.06</td><td class="num c">3.27</td><td class="num g">1.17</td><td class="num c">37,237</td><td class="num g">0</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">198,841</td><td class="num g">0</td></tr><tr><td class="wtz">Weight-Z</td><td class="num c">0.02</td><td class="num g">+0.17</td><td class="num c">189.04</td><td class="num g">1.36</td><td class="num c">12,113</td><td class="num g">1,337</td><td class="num" colspan="2" style="color:var(--muted);text-align:center">n/a</td><td class="num c">321,172</td><td class="num g">0</td></tr></tbody></table></div>
+  <p class="sub" style="margin-top:10px;font-size:.72rem">Infant BMI-Z and source-BMI range apply to BMI-Z only (n/a for Height-Z and Weight-Z). The Biologically Implausible Value (BIV) cutoffs are the pipeline's own modified-z screening thresholds; v2 is zero for Height-Z and Weight-Z at every site because the screening removes exactly these rows. The legacy pipeline never computes a modified-z, so its Height-Z/Weight-Z figures apply the equivalent threshold to the published z-score as a proxy — illustrative, not strictly equivalent. v2 still retains some |z|&gt;10 values by design (CDC flag-don't-delete) where the modified-z remains within bounds — Site H's weight distribution skews high, but every retained row is sub-threshold.</p>
+</div>
+
+<hr>
+<div class="callout"><strong>These findings conclusively demonstrate that the derivations refactor improved and optimized long-standing legacy pipelines.</strong> Across 10 production hospital sites and three consecutive submission versions, matched-pair results show a median task-runtime speedup of <b style="color:var(--gold)">256&times;</b> and a <b style="color:var(--gold)">284&times;</b> wall-clock reduction (<b style="color:var(--red)">1,664.5h</b> legacy to <b style="color:var(--grn)">5.6h</b> LnDv2). Independently, the rewrite's input screening restored all three z-score distributions to valid ranges at every site: standard deviations fell from as high as the billions to approximately 1, Height-Z extreme values (|z| &gt; 10) were eliminated entirely, and no published row breached the pipeline's own screening thresholds at any site.</div>
+<p class="sub" style="margin-top:16px">Methodology: runtimes from Airflow <code>task_instance.duration</code> (execution time, queue wait excluded), matched on site &times; version &times; submission. QC metrics from derived <code>measurement</code> tables (<code>measurement_type_concept_id = 45754907</code>), pipeline-authored rows only, DCC v62 across all 10 sites.</p>
+<script>
+const SITES=["Site E", "Site F", "Site G", "Site J", "Site H", "Site A", "Site C", "Site D", "Site I", "Site B"];
+const D={
+  bmi_sites:["Site B", "Site F", "Site H", "Site C", "Site A", "Site E", "Site G", "Site I", "Site J", "Site D"],
+  bmi_v1_61:[55.6572, 35.65, 34.63, 30.96, 21.51, 16.24, 16.08, 11.29, 10.5, 8.51],
+  bmi_v1_62:[59.7589, 36.03, 36.06, 33.22, 19.27, 15.93, 15.7, 11.82, 9.91, 6.74],
+  bmi_v2_61:[0.0228, 0.06, 0.045, 0.035, 0.07, 0.04, 0.045, 0.02, 0.02, 0.03],
+  bmi_v2_62:[0.0144, 0.04, 0.02, 0.04, 0.02, 0.04, 0.03, 0.01, 0.01, 0.02],
+  bmi_v1_total:[115.4161, 71.68, 70.69, 64.18, 40.78, 32.17, 31.78, 23.11, 20.41, 15.25],
+  bmi_v2_total:[0.0372, 0.1, 0.065, 0.075, 0.09, 0.08, 0.075, 0.03, 0.03, 0.05],
+  task:["BMI", "BMI-Z", "Height-Z", "Weight-Z"],task_med:[682, 189, 188, 250],task_col:["#818cf8", "#34d399", "#fb923c", "#a78bfa"],
+  sb_sites:["Site B", "Site F", "Site C", "Site H", "Site A", "Site G", "Site E", "Site I", "Site J", "Site D"],sb_v61:[185.79, 129.8, 110.5, 105.3, 77.5, 56.3, 56.6, 40.0, 38.4, 29.2],sb_v62:[198.9, 127.6, 117.4, 107.9, 67.6, 56.5, 55.2, 42.5, 37.1, 24.4],
+  bmiz_sd_v1:[9928078.646, 3968237.622, 122324832.202, 29779777019.386, 97173323161.725, 21409246997.806, 767715.784, 1404678.861, 87339132401.623, 896216.108],bmiz_sd_v2:[1.353, 1.218, 1.385, 1.356, 3.733, 1.352, 1.341, 1.332, 1.35, 1.283],
+  htz_sd_v1:[3.525, 10.281, 18.521, 9.551, 182.568, 2878.87, 3.322, 27.595, 319.129, 3.267],htz_sd_v2:[1.311, 1.183, 1.289, 1.307, 1.231, 1.293, 1.238, 1.311, 1.251, 1.172],
+  wtz_sd_v1:[812.975, 10349.501, 7439.704, 1206.106, 257.893, 24008.744, 670.286, 2676.149, 12596904.85, 189.036],wtz_sd_v2:[1.514, 1.344, 1.513, 1.494, 1.775, 1.624, 1.423, 1.546, 1.486, 1.363],
+  ht_ext_v1:[11598, 19665, 11488, 8560, 761846, 55506, 30355, 5331, 11241, 37237],ht_ext_v2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  wt_ext_v1:[4925, 6822, 6339, 3418, 160399, 92854, 10899, 4252, 64851, 12113],wt_ext_v2:[821, 601, 662, 753, 15513, 669, 1565, 882, 425, 1337],
+  rc_v1:[135673339, 86308628, 91528428, 153676307],rc_v2:[115895697, 81054413, 84806850, 143021433]
+};
+
+let FC='#e2e8f0', GRID='#1e2235';
+function axis(o){ var b={ticks:{color:FC},grid:{color:GRID}}; return Object.assign(b,o||{}); }
+function logAxis(t,stacked){ return {type:'logarithmic',stacked:!!stacked,title:{display:!!t,text:t||'',color:FC},ticks:{color:FC,callback:function(v){return v>=1000?(v/1000)+'k':v;}},grid:{color:GRID}}; }
+function linAxis(t,stacked){ return {type:'linear',stacked:!!stacked,title:{display:!!t,text:t||'',color:FC},ticks:{color:FC,callback:function(v){return v>=1000?(v/1000)+'k':v;}},grid:{color:GRID}}; }
+var CH=[];
+function reg(c){ CH.push(c); return c; }
+
+// ---- scale-toggle infrastructure ----
+var SCALE_CHARTS = {}; // id -> {chart, axisTitle, stacked}
+function makeScaleToggle(containerId, chartId, axisTitle, defaultMode){
+  defaultMode = defaultMode || 'log';
+  var el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML =
+    '<button class="scale-btn'+(defaultMode==='log'?' active':'')+'" data-chart="'+chartId+'" data-mode="log">Log</button>' +
+    '<button class="scale-btn'+(defaultMode==='linear'?' active':'')+'" data-chart="'+chartId+'" data-mode="linear">Linear</button>';
+  el.querySelectorAll('.scale-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var mode = btn.getAttribute('data-mode');
+      var cid = btn.getAttribute('data-chart');
+      setScale(cid, mode, axisTitle);
+      el.querySelectorAll('.scale-btn').forEach(function(b){ b.classList.remove('active'); });
+      el.querySelectorAll('[data-mode="'+mode+'"]').forEach(function(b){ b.classList.add('active'); });
+    });
+  });
+}
+function setScale(chartId, mode, axisTitle){
+  var entry = SCALE_CHARTS[chartId];
+  if(!entry) return;
+  entry.chart.options.scales.y = (mode === 'log') ? logAxis(axisTitle, entry.stacked) : linAxis(axisTitle, entry.stacked);
+  entry.chart.update();
+}
+
+function bmiDatasets(mode){
+  if(mode==='split'){
+    return [
+      {label:'v1 Perl · v61',data:D.bmi_v1_61,backgroundColor:'rgba(248,113,113,0.55)',borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4},stack:'v1'},
+      {label:'v1 Perl · v62',data:D.bmi_v1_62,backgroundColor:'rgba(248,113,113,0.9)',borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0},stack:'v1'},
+      {label:'v2 Trino · v61',data:D.bmi_v2_61,backgroundColor:'rgba(52,211,153,0.55)',borderRadius:{topLeft:0,topRight:0,bottomLeft:4,bottomRight:4},stack:'v2'},
+      {label:'v2 Trino · v62',data:D.bmi_v2_62,backgroundColor:'rgba(52,211,153,0.9)',borderRadius:{topLeft:4,topRight:4,bottomLeft:0,bottomRight:0},stack:'v2'}
+    ];
+  }
+  return [
+    {label:'v1 Perl',data:D.bmi_v1_total,backgroundColor:'rgba(248,113,113,0.85)',borderRadius:4,stack:'v1'},
+    {label:'v2 Trino',data:D.bmi_v2_total,backgroundColor:'rgba(52,211,153,0.85)',borderRadius:4,stack:'v2'}
+  ];
+}
+reg(new Chart('logChart',{type:'bar',data:{labels:D.bmi_sites,datasets:bmiDatasets('total')},
+  options:{responsive:true,scales:{x:axis({stacked:true,grid:{display:false},ticks:{color:FC,font:{size:10}}}),y:linAxis('runtime (hrs)',true)},
+  plugins:{legend:{labels:{color:FC,boxWidth:12,font:{size:10}}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(3)+'h';},footer:function(items){var stack=items[0].dataset.stack;var sum=items.filter(function(i){return i.dataset.stack===stack;}).reduce(function(a,i){return a+i.parsed.y;},0);return (stack==='v1'?'v1 total: ':'v2 total: ')+sum.toFixed(3)+'h';}}}}}}));
+SCALE_CHARTS['logChart'] = {chart: CH[CH.length-1], axisTitle: 'runtime (hrs)', stacked: true};
+makeScaleToggle('logChartToggle', 'logChart', 'runtime (hrs)', 'linear');
+
+function makeStackToggle(containerId, chartId, defaultMode){
+  defaultMode = defaultMode || 'total';
+  var el = document.getElementById(containerId);
+  if(!el) return;
+  el.innerHTML =
+    '<button class="scale-btn'+(defaultMode==='total'?' active':'')+'" data-mode="total">Total</button>' +
+    '<button class="scale-btn'+(defaultMode==='split'?' active':'')+'" data-mode="split">Split</button>';
+  el.querySelectorAll('.scale-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var mode = btn.getAttribute('data-mode');
+      var entry = SCALE_CHARTS[chartId];
+      if(!entry) return;
+      entry.chart.data.datasets = bmiDatasets(mode);
+      entry.chart.update();
+      el.querySelectorAll('.scale-btn').forEach(function(b){ b.classList.remove('active'); });
+      el.querySelectorAll('[data-mode="'+mode+'"]').forEach(function(b){ b.classList.add('active'); });
+    });
+  });
+}
+makeStackToggle('logChartStackToggle', 'logChart', 'total');
+
+reg(new Chart('taskChart',{type:'bar',data:{labels:D.task,datasets:[{data:D.task_med,backgroundColor:D.task_col,borderRadius:5}]},
+  options:{responsive:true,scales:{x:axis({grid:{display:false}}),y:axis({title:{display:true,text:'median speedup',color:FC},ticks:{color:FC,callback:function(v){return v+'x';}}})},
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y+'x faster (median)';}}}}}}));
+reg(new Chart('siteChart',{type:'bar',data:{labels:D.sb_sites,datasets:[
+  {label:'v61',data:D.sb_v61,backgroundColor:'rgba(99,102,241,0.85)',borderRadius:2},
+  {label:'v62',data:D.sb_v62,backgroundColor:'rgba(67,56,202,0.9)',borderRadius:2}]},
+  options:{indexAxis:'y',responsive:true,scales:{x:axis({stacked:true,title:{display:true,text:'total v1 hours',color:FC}}),y:axis({stacked:true,grid:{display:false}})},
+  plugins:{legend:{labels:{color:FC}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.x.toFixed(1)+'h';}}}}}}));
+
+function sdChart(id,v1,v2,col){ var c = reg(new Chart(id,{type:'bar',data:{labels:SITES,datasets:[
+  {label:'v1 Perl',data:v1,backgroundColor:'rgba(248,113,113,0.78)',borderRadius:3},
+  {label:'v2 Trino',data:v2,backgroundColor:col,borderRadius:3}]},
+  options:{responsive:true,scales:{x:axis({ticks:{color:FC,maxRotation:55,minRotation:55,font:{size:9}},grid:{display:false}}),y:logAxis('std dev (log)')},
+  plugins:{legend:{labels:{color:FC,boxWidth:10}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+Number(c.parsed.y).toLocaleString();}}}}}}));
+  SCALE_CHARTS[id] = {chart: c, axisTitle: 'std dev'};
+  return c;
+}
+sdChart('sdBmiz',D.bmiz_sd_v1,D.bmiz_sd_v2,'rgba(129,140,248,0.85)');
+sdChart('sdHtz', D.htz_sd_v1, D.htz_sd_v2, 'rgba(251,146,60,0.85)');
+sdChart('sdWtz', D.wtz_sd_v1, D.wtz_sd_v2, 'rgba(167,139,250,0.85)');
+makeScaleToggle('sdBmizToggle', 'sdBmiz', 'std dev');
+makeScaleToggle('sdHtzToggle', 'sdHtz', 'std dev');
+makeScaleToggle('sdWtzToggle', 'sdWtz', 'std dev');
+
+reg(new Chart('htExt',{type:'bar',data:{labels:SITES,datasets:[
+  {label:'v1 Perl |z|>10',data:D.ht_ext_v1,backgroundColor:'rgba(248,113,113,0.78)',borderRadius:4},
+  {label:'v2 Trino (=0)',data:D.ht_ext_v2,backgroundColor:'rgba(52,211,153,0.85)',borderRadius:4}]},
+  options:{responsive:true,scales:{x:axis({grid:{display:false}}),y:axis({title:{display:true,text:'Height-Z rows |z|>10',color:FC},ticks:{color:FC,callback:function(v){return v>=1000?(v/1000)+'k':v;}}})},
+  plugins:{legend:{labels:{color:FC}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+Number(c.parsed.y).toLocaleString();}}}}}}));
+reg(new Chart('wtExt',{type:'bar',data:{labels:SITES,datasets:[
+  {label:'v1 Perl |z|>10',data:D.wt_ext_v1,backgroundColor:'rgba(248,113,113,0.78)',borderRadius:4},
+  {label:'v2 Trino',data:D.wt_ext_v2,backgroundColor:'rgba(167,139,250,0.85)',borderRadius:4}]},
+  options:{responsive:true,scales:{x:axis({grid:{display:false}}),y:axis({title:{display:true,text:'Weight-Z rows |z|>10',color:FC},ticks:{color:FC,callback:function(v){return v>=1000?(v/1000)+'k':v;}}})},
+  plugins:{legend:{labels:{color:FC}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+Number(c.parsed.y).toLocaleString();}}}}}}));
+reg(new Chart('rowChart',{type:'bar',data:{labels:D.task,datasets:[
+  {label:'v1 Perl',data:D.rc_v1,backgroundColor:'rgba(248,113,113,0.65)',borderColor:'#f87171',borderWidth:1,borderRadius:4},
+  {label:'v2 Trino',data:D.rc_v2,backgroundColor:'rgba(52,211,153,0.75)',borderColor:'#34d399',borderWidth:1,borderRadius:4}]},
+  options:{responsive:true,scales:{x:axis({grid:{display:false}}),y:axis({title:{display:true,text:'total rows (all sites)',color:FC},ticks:{color:FC,callback:function(v){return (v/1e6).toFixed(0)+'M';}}})},
+  plugins:{legend:{labels:{color:FC}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+Number(c.parsed.y).toLocaleString()+' rows';}}}}}}));
+
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  FC=(t==='dark')?'#e2e8f0':'#1e293b'; GRID=(t==='dark')?'#1e2235':'#e8ebf2';
+  CH.forEach(function(c){
+    Object.keys(c.options.scales||{}).forEach(function(k){var sc=c.options.scales[k];
+      if(sc.ticks)sc.ticks.color=FC; if(sc.grid)sc.grid.color=GRID; if(sc.title)sc.title.color=FC;});
+    if(c.options.plugins&&c.options.plugins.legend&&c.options.plugins.legend.labels)c.options.plugins.legend.labels.color=FC;
+    c.update();});
+}
+</script></body></html>
