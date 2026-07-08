@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -105,6 +106,76 @@ app.get('/projects/:projectName', (req, res) => {
     title: project.title,
     content: marked.parse(project.body),
   });
+});
+
+let dancerLineCount = 0;
+let dancerLineDayKey = null;
+const DANCER_LINE_DAILY_CAP = 200;
+
+app.post('/funky/api/dancer-line', async (req, res) => {
+  const todayKey = new Date().toISOString().slice(0, 10);
+  if (todayKey !== dancerLineDayKey) {
+    dancerLineDayKey = todayKey;
+    dancerLineCount = 0;
+  }
+  if (dancerLineCount >= DANCER_LINE_DAILY_CAP) {
+    return res.status(429).json({ error: 'daily cap reached' });
+  }
+  dancerLineCount++;
+
+  let text;
+  try {
+    const orResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'meta-llama/llama-3.1-8b-instruct',
+        messages: [
+          {
+            role: 'system',
+            content: "You are a friendly street dancer at a small personal portfolio website. Offer the visitor one short, warm, sincere, and touching thought about life, kindness, or being human — heartfelt and universal, never hype, never about code or technology. Two sentences maximum. Never claim to be the site's owner or to know the visitor personally; if asked something personal, gently deflect in character (e.g. 'I just dance here, but I'm glad you're here').",
+          },
+          { role: 'user', content: 'Say something to the visitor.' },
+        ],
+        max_tokens: 60,
+        temperature: 0.9,
+      }),
+    });
+    if (!orResponse.ok) throw new Error(`OpenRouter ${orResponse.status}`);
+    const orData = await orResponse.json();
+    text = orData.choices?.[0]?.message?.content?.trim();
+    if (!text) throw new Error('empty OpenRouter response');
+  } catch (err) {
+    console.error('dancer-line: OpenRouter failed:', err.message);
+    return res.status(502).json({ error: 'text generation failed' });
+  }
+
+  let audio = null;
+  if (process.env.VOICE_ENABLED === 'true') {
+    try {
+      const elResponse = await fetch(
+        'https://api.elevenlabs.io/v1/text-to-speech/TX3LPaxmHKxFdv7VOQHJ',
+        {
+          method: 'POST',
+          headers: {
+            'xi-api-key': process.env.ELEVENLABS_API_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text, model_id: 'eleven_flash_v2_5' }),
+        }
+      );
+      if (!elResponse.ok) throw new Error(`ElevenLabs ${elResponse.status}`);
+      const buffer = Buffer.from(await elResponse.arrayBuffer());
+      audio = buffer.toString('base64');
+    } catch (err) {
+      console.error('dancer-line: ElevenLabs failed (text-only fallback):', err.message);
+    }
+  }
+
+  res.json({ text, audio });
 });
 
 app.listen(port, () => {
