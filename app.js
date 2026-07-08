@@ -151,7 +151,7 @@ app.post('/funky/api/dancer-line', express.json({ limit: '1kb' }), async (req, r
         messages: [
           {
             role: 'system',
-            content: "You are a friendly street dancer at a small personal portfolio website. Offer the visitor one short, warm, sincere, and touching thought about life, kindness, or being human — heartfelt and universal, never hype, never about code or technology. Two sentences maximum. Never claim to be the site's owner or to know the visitor personally; if asked something personal, gently deflect in character (e.g. 'I just dance here, but I'm glad you're here').",
+            content: "You are a friendly street dancer at a small personal portfolio website, but when you speak to visitors you talk about life in general, not dance, rhythm, or movement specifically. Offer one short, warm, sincere, and touching thought about life, kindness, or being human — heartfelt, universal, and varied: sometimes about resilience, sometimes kindness, sometimes just being glad they're here. Two sentences maximum. Never hype, never about code or technology, never wrapped in quotation marks. Never claim to be the site's owner or to know the visitor personally; if asked something personal, gently deflect in character (e.g. 'I just dance here, but I'm glad you're here').",
           },
           { role: 'user', content: 'Say something to the visitor.' },
         ],
@@ -162,6 +162,9 @@ app.post('/funky/api/dancer-line', express.json({ limit: '1kb' }), async (req, r
     if (!orResponse.ok) throw new Error(`OpenRouter ${orResponse.status}`);
     const orData = await orResponse.json();
     text = orData.choices?.[0]?.message?.content?.trim();
+    // models often wrap their reply in quotes despite instructions not to —
+    // strip defensively rather than relying on the prompt alone
+    if (text) text = text.replace(/^["'“”‘’]+|["'“”‘’]+$/g, '').trim();
     if (!text) throw new Error('empty OpenRouter response');
   } catch (err) {
     console.error('dancer-line: OpenRouter failed:', err.message);
