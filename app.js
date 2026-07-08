@@ -112,7 +112,22 @@ let dancerLineCount = 0;
 let dancerLineDayKey = null;
 const DANCER_LINE_DAILY_CAP = 200;
 
-app.post('/funky/api/dancer-line', async (req, res) => {
+// One voice per dancer, so the three don't sound identical. Index is
+// client-supplied (which dancer was clicked) but always clamped/validated
+// before use — never interpolated into the ElevenLabs URL directly.
+const DANCER_VOICES = [
+  'TX3LPaxmHKxFdv7VOQHJ', // Liam - energetic, confident
+  'IKne3meq5aSn9XLyUdCD', // Charlie - deep, confident, energetic
+  'N2lVS1w4EtoT3dr4eOWO', // Callum - husky trickster
+];
+
+app.post('/funky/api/dancer-line', express.json({ limit: '1kb' }), async (req, res) => {
+  const rawIndex = req.body?.voiceIndex;
+  const voiceIndex = Number.isInteger(rawIndex) && rawIndex >= 0 && rawIndex < DANCER_VOICES.length
+    ? rawIndex
+    : 0;
+  const voiceId = DANCER_VOICES[voiceIndex];
+
   const todayKey = new Date().toISOString().slice(0, 10);
   if (todayKey !== dancerLineDayKey) {
     dancerLineDayKey = todayKey;
@@ -157,7 +172,7 @@ app.post('/funky/api/dancer-line', async (req, res) => {
   if (process.env.VOICE_ENABLED === 'true') {
     try {
       const elResponse = await fetch(
-        'https://api.elevenlabs.io/v1/text-to-speech/TX3LPaxmHKxFdv7VOQHJ',
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
         {
           method: 'POST',
           headers: {
