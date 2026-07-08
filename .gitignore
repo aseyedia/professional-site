@@ -6,3 +6,4 @@ public/funky
 dist
 package-lock.json
 .env
+.superpowers/
